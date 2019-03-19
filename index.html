@@ -35,28 +35,43 @@
 				<h2>Heading</h2>
 					<article>
 					<canvas id="myCanvas" width="800" height="800">Your browser does not support the HTML5 canvas tag.</canvas>
+
 					<script>
-						var c = document.getElementById("myCanvas");
-						var ctx = c.getContext("2d");
-						ctx.beginPath();
-						ctx.arc(95,50,40,0,2*Math.PI);
-						ctx.stroke();
-						var dtx = c.getContext("2d");
-						dtx.beginPath();
-						dtx.arc(200+95,50,40,0,2*Math.PI);
-						dtx.stroke();
-						var etx = c.getContext("2d");
-						etx.moveTo( 95-40, 50+40);
-						etx.lineTo( 295+40, 50+40);
-						etx.stroke();
-						var ftx = c.getContext("2d");
-						ftx.moveTo( 95-40, 50+40+10);
-						ftx.lineTo(295+40, 50+40+10);
-						ftx.stroke();
+					var c = document.getElementById("myCanvas");
+					var valY = 50;
+					var valX = 95;
+					var valRadiusCircleLeft = 40;
+					var valRadiusCircleRight = 40;
+					var valDistanceBetweenCircles = 200;
+					var valWidthSeesaw = 10;
+					var valHeightFulcrum = 20;
+					var valWidthFulcrum = 20;
+					
+					var circleLeft = c.getContext("2d");
+					circleLeft.beginPath();
+					circleLeft.arc(valX,valY,valRadiusCircleLeft,0,2*Math.PI);
+					circleLeft.stroke();
+					
+					var circleRight = c.getContext("2d");
+					circleRight.beginPath();
+					circleRight.arc(valDistanceBetweenCircles+valX,valY,valRadiusCircleRight,0,2*Math.PI);
+					circleRight.stroke();
+					
+					var seesaw = c.getContext("2d");
+					seesaw.rect(valX-valRadiusCircleLeft, valY+valRadiusCircleLeft, valDistanceBetweenCircles+valRadiusCircleLeft+valRadiusCircleRight, valWidthSeesaw);
+					seesaw.stroke();
+					
+					var fulcrum = c.getContext("2d");
+					fulcrum.rect(valX+(valDistanceBetweenCircles/2)-(valWidthFulcrum/2), valY+valRadiusCircleLeft+valWidthSeesaw, valWidthFulcrum, valHeightFulcrum);
+					fulcrum.stroke();
 					</script>
-					</article>
+
+<h1> </h1>
+<button type="leftArrow" onclick="alert('Left is Bigger!')">Left Arrow!</button>
+<button type="rightArrow" onclick="alert('Right Arrow!')">Right Arrow!</button>
+				</article>
 				<h3>Info and Instructions</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc euismod nunc non mauris vehicula, vitae commodo felis finibus. Quisque imperdiet nulla et luctus vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat sed nunc vel tincidunt. Cras porta a odio eu fermentum. Morbi sed auctor metus. Vivamus malesuada lorem at lacus posuere congue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras at vestibulum purus. Fusce dictum erat lectus, at tempus erat auctor a. Mauris ultricies, turpis quis tempus eleifend, ex sapien viverra massa, vel imperdiet diam diam nec urna. Vestibulum pulvinar gravida mi, eget lacinia nulla semper id.</p>
+				<p>Once upon a time a firghtful orange grew to be the biggest citrus in the land. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc euismod nunc non mauris vehicula, vitae commodo felis finibus. Quisque imperdiet nulla et luctus vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat sed nunc vel tincidunt. Cras porta a odio eu fermentum. Morbi sed auctor metus. Vivamus malesuada lorem at lacus posuere congue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras at vestibulum purus. Fusce dictum erat lectus, at tempus erat auctor a. Mauris ultricies, turpis quis tempus eleifend, ex sapien viverra massa, vel imperdiet diam diam nec urna. Vestibulum pulvinar gravida mi, eget lacinia nulla semper id.</p>
 				<p>Maecenas iaculis laoreet velit, dignissim auctor enim porta vitae. Praesent in condimentum neque. Duis et neque sed magna mollis finibus at id orci. Praesent eu urna leo. Nam non risus arcu. Praesent bibendum nibh id metus dapibus, quis suscipit dui dapibus. Pellentesque iaculis, tellus id scelerisque cursus, massa dui eleifend nunc, sit amet vulputate orci dui in justo. Morbi dolor lorem, accumsan non ullamcorper vitae, lobortis id dui. Nam ut efficitur mi. Curabitur augue erat, eleifend id eleifend nec, cursus sit amet eros. Sed bibendum nunc id nunc commodo sagittis.</p>
 			</section>
 		</main>
