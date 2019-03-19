@@ -3,25 +3,20 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 
 <script>
 var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-ctx.beginPath();
-ctx.arc(95,50,40,0,2*Math.PI);
-ctx.stroke();
-
-var dtx = c.getContext("2d");
-dtx.beginPath();
-dtx.arc(200+95,50,40,0,2*Math.PI);
-dtx.stroke();
-
-var etx = c.getContext("2d");
-etx.moveTo( 95-40, 50+40);
-etx.lineTo( 295+40, 50+40);
-etx.stroke();
-
-var ftx = c.getContext("2d");
-ftx.moveTo( 95-40, 50+40+10);
-ftx.lineTo(295+40, 50+40+10);
-ftx.stroke();
+var circleLeft = c.getContext("2d");
+circleLeft.beginPath();
+circleLeft.arc(95,50,40,0,2*Math.PI);
+circleLeft.stroke();
+var circleRight = c.getContext("2d");
+circleRight.beginPath();
+circleRight.arc(200+95,50,40,0,2*Math.PI);
+circleRight.stroke();
+var seesaw = c.getContext("2d");
+seesaw.rect(95-40, 50+40, 200+40+40, 20);
+seesaw.stroke();
+var fulcrum = c.getContext("2d");
+fulcrum.rect(95+100-10, 50+40+20, 20, 20);
+fulcrum.stroke();
 </script>
 
 </body>
