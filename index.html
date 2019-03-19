@@ -13,7 +13,7 @@
 		document.createElement("header");
 		document.createElement("main");
 		document.createElement("nav");
-		document.createElement("section");
+		document.createElement("secti#on");
 	</script>
 	<![endif]-->
 	<body>
@@ -33,9 +33,28 @@
 		<main >
 			<section>
 				<h2>Heading</h2>
-				<article>
-					<p style="color:black; height:400px">(Game content.)</p>
-				</article>
+					<article>
+					<canvas id="myCanvas" width="800" height="800">Your browser does not support the HTML5 canvas tag.</canvas>
+					<script>
+						var c = document.getElementById("myCanvas");
+						var ctx = c.getContext("2d");
+						ctx.beginPath();
+						ctx.arc(95,50,40,0,2*Math.PI);
+						ctx.stroke();
+						var dtx = c.getContext("2d");
+						dtx.beginPath();
+						dtx.arc(200+95,50,40,0,2*Math.PI);
+						dtx.stroke();
+						var etx = c.getContext("2d");
+						etx.moveTo( 95-40, 50+40);
+						etx.lineTo( 295+40, 50+40);
+						etx.stroke();
+						var ftx = c.getContext("2d");
+						ftx.moveTo( 95-40, 50+40+10);
+						ftx.lineTo(295+40, 50+40+10);
+						ftx.stroke();
+					</script>
+					</article>
 				<h3>Info and Instructions</h3>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc euismod nunc non mauris vehicula, vitae commodo felis finibus. Quisque imperdiet nulla et luctus vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam placerat sed nunc vel tincidunt. Cras porta a odio eu fermentum. Morbi sed auctor metus. Vivamus malesuada lorem at lacus posuere congue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras at vestibulum purus. Fusce dictum erat lectus, at tempus erat auctor a. Mauris ultricies, turpis quis tempus eleifend, ex sapien viverra massa, vel imperdiet diam diam nec urna. Vestibulum pulvinar gravida mi, eget lacinia nulla semper id.</p>
 				<p>Maecenas iaculis laoreet velit, dignissim auctor enim porta vitae. Praesent in condimentum neque. Duis et neque sed magna mollis finibus at id orci. Praesent eu urna leo. Nam non risus arcu. Praesent bibendum nibh id metus dapibus, quis suscipit dui dapibus. Pellentesque iaculis, tellus id scelerisque cursus, massa dui eleifend nunc, sit amet vulputate orci dui in justo. Morbi dolor lorem, accumsan non ullamcorper vitae, lobortis id dui. Nam ut efficitur mi. Curabitur augue erat, eleifend id eleifend nec, cursus sit amet eros. Sed bibendum nunc id nunc commodo sagittis.</p>
