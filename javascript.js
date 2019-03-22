@@ -15,7 +15,7 @@ const MIN_SIZE = 20, MAX_SIZE = 100;
 var mouse = {
     x: 0,
     y: 0
-}
+};
 
 var dragBox = {
     x: max_left,
@@ -25,7 +25,7 @@ var dragBox = {
     draw: function() {
 
     }
-}
+};
 
 var fulcrum = {
     x: centerX,
@@ -132,7 +132,7 @@ var positions = {
     clientY: 0,
     screenX: 0,
     screenY: 0
-}
+};
 
 /*  Initializes important variables for animation.
  */
@@ -163,7 +163,8 @@ function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
 
-    document.getElementsByName("%prod").value; // Not sure what this was being used for
+    var perc_prod = document.getElementsByName("%prod")[0].value;
+    var perc_reac = document.getElementsByName("%reac")[0].value;
 
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
@@ -181,6 +182,8 @@ function draw() {
     ctx.strokeText("x: " + fulcrum.x, mouse.x, mouse.y + 30);
     ctx.strokeText("drag: " + drag, mouse.x, mouse.y + 40);
     ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), mouse.x, mouse.y + 50);
+    ctx.strokeText("%reac: " + perc_reac, mouse.x, mouse.y + 70);
+    ctx.strokeText("%prod: " + perc_prod, mouse.x, mouse.y + 80);
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
     ctx.strokeText("clientY" + positions.clientY, mouse.x, mouse.y + 80);

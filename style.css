@@ -83,7 +83,7 @@ section > p, h3 {
 article {
 	width: 800px;
 	height: 400px;
-	margin: 15px auto 110px;
+	margin: 15px auto 160px;
 	background-color: white;
 }
 
@@ -97,8 +97,62 @@ label {
 	font-weight: bold;
 }
 
-input {
+.container {
+  position: relative;
+  padding-left: 25px;
+  padding-right: 50px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+}
+
+.container:hover input ~ .select {
+  background-color: #ccc;
+}
+
+.container input:checked ~ .select {
+  background-color: #2196F3;
+}
+
+.select:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container input:checked ~ .select:after {
+  display: block;
+}
+
+.container .select:after {
+  left: 3px;
+  top: 3px;
+  width: 1px;
+  height: 1px;
+  border: solid white 4px;
+}
+
+input[type=radio]{
+	cursor: pointer;
 }
 
 form {
