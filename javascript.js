@@ -163,7 +163,7 @@ function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
 
-    vadocument.getElementByName("%prod").value;
+    document.getElementsByName("%prod").value; // Not sure what this was being used for
 
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
