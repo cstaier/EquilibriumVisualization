@@ -27,6 +27,16 @@ html, body {
   background: yellow;
 }
 
+.field_row {
+	text-align: center;
+}
+
+.field_item {
+	padding: 5px 0px;
+	width: 150px;
+	display: inline-block;
+}
+
 #myCanvas{
   border: 1px solid #d3d3d3;
 }
@@ -71,14 +81,32 @@ section > p, h3 {
 }
 
 article {
-  width: 800px;
-  height: 400px;
-  margin: 15px auto 0px;
+	width: 800px;
+	height: 400px;
+	margin: 15px auto 110px;
 	background-color: white;
 }
 
+fieldset {
+	border: 2px solid white;
+}
+
+label {
+	margin-right: 3px;
+	text-align: right;
+	font-weight: bold;
+}
+
+input {
+
+}
+
+form {
+	padding: 5px;
+}
+
 main {
-	margin-bottom: 10px;
+	margin-bottom: 60px;
 }
 
 footer {

@@ -1,7 +1,7 @@
 var canvas = document.getElementById("myCanvas");
 if (canvas.getContext) var ctx = canvas.getContext("2d");
-var canvasLeft = getPosition(canvas).x;
-var canvasTop = getPosition(canvas).y;
+var canvasLeft;
+var canvasTop;
 var raf;
 
 var centerX = 400, centerY = 200, buffer = 20;
@@ -15,6 +15,16 @@ const MIN_SIZE = 20, MAX_SIZE = 100;
 var mouse = {
     x: 0,
     y: 0
+}
+
+var dragBox = {
+    x: max_left,
+    y: 0,
+    width: max_right - max_left,
+    height: canvas.height,
+    draw: function() {
+
+    }
 }
 
 var fulcrum = {
@@ -115,6 +125,15 @@ var obj = {
     }
 };
 
+var positions = {
+    pageX: 0,
+    pageY: 0,
+    clientX: 0,
+    clientY: 0,
+    screenX: 0,
+    screenY: 0
+}
+
 /*  Initializes important variables for animation.
  */
 function init() {
@@ -130,7 +149,7 @@ function getPosition( element ) {
 /*  Performs necessart mathematics that alter the state of the animations.
  */
 function math() {
-    
+
 }
 
 /*  Draw animation to canvas.
@@ -141,6 +160,11 @@ function math() {
  *    products.size: (products): size of products box (Recommended values: [20, 120])
  */
 function draw() {
+    canvasLeft = getPosition(canvas).x;
+    canvasTop = getPosition(canvas).y;
+
+    vadocument.getElementByName("%prod").value;
+
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
     var angle = seesaw.angle * (Math.PI / 180);
@@ -150,13 +174,23 @@ function draw() {
     // Draws objects to screen.
     var time = new Date();
     var angle_dx = 0; //(time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
-
+    //math();
      // Clears canvas.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     ctx.strokeText("x: " + fulcrum.x, mouse.x, mouse.y + 30);
     ctx.strokeText("drag: " + drag, mouse.x, mouse.y + 40);
     ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), mouse.x, mouse.y + 50);
+    /*
+    ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
+    ctx.strokeText("clientY" + positions.clientY, mouse.x, mouse.y + 80);
+    ctx.strokeText("pageX" + positions.pageX, mouse.x, mouse.y + 90);
+    ctx.strokeText("pageY" + positions.pageY, mouse.x, mouse.y + 100);
+    ctx.strokeText("screenX" + positions.screenX, mouse.x, mouse.y + 110);
+    ctx.strokeText("screenY" + positions.screenY, mouse.x, mouse.y + 120);
+    ctx.strokeText("canvasLeft" + canvasLeft, mouse.x, mouse.y + 130);
+    ctx.strokeText("canvasTop" + canvasTop, mouse.x, mouse.y + 140);
+    */
     
     obj.draw();
     
@@ -181,10 +215,23 @@ canvas.addEventListener('keydown', function(e) {
     
 });
 
+canvas.addEventListener('mouseover', function(e) {
+    
+});
+
 canvas.addEventListener('mousemove', function(e) {
     mouse.x = e.clientX - canvasLeft;
     mouse.y = e.clientY - canvasTop;
+    positions.pageX = e.pageX;
+    positions.pageY = e.pageY;
+    positions.clientX = e.clientX;
+    positions.clientY = e.clientY;
+    positions.screenX = e.screenX;
+    positions.screenY = e.screenY;
 
+    obj.x = mouse.x;
+    obj.y = mouse.y;
+    //if ( mouse.x < max_left || mouse.y > max_right ) cancelAnimationFrame(raf);
     //if (drag && !fulcrum.outOfRange()) fulcrum.x = mouse.x;
     if (drag && !fulcrum.outOfRange()) fulcrum.x = mouse.x;
 });
@@ -194,6 +241,10 @@ canvas.addEventListener('mousedown', function(e) {
 });
 
 canvas.addEventListener('mouseup', function(e) {
+    drag = false;
+});
+
+canvas.addEventListener('mouseleave', function(e) {
     drag = false;
 });
 
