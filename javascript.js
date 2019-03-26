@@ -84,6 +84,7 @@ var reactants = {
     size: 20,
     x: seesaw.left + buffer,
     y: fulcrum.y - seesaw.width,
+    percent: 50,
     color: "rgb(200, 0, 0)",
     draw: function() {
         if ( this.size < MIN_SIZE ) this.size = MIN_SIZE;
@@ -103,6 +104,7 @@ var products = {
     size: 100,
     x: seesaw.right - buffer,
     y: fulcrum.y - seesaw.width,
+    percent: 50,
     color: "rgb(0, 0, 200)",
     draw: function() {
         if ( this.size < MIN_SIZE ) this.size = MIN_SIZE;
@@ -156,7 +158,21 @@ function getPosition( element ) {
 /*  Performs necessart mathematics that alter the state of the animations.
  */
 function math() {
+    // Updates reactant and product percentage values.
+    var perc_reac = document.getElementsByName("%reac")[0].value;
+    var perc_prod = document.getElementsByName("%prod")[0].value;
+    
 
+    if ( reactants.percent != perc_reac && perc_reac >= 0 && perc_reac <= 100) {
+        reactants.percent = perc_reac;
+        products.percent = 100 - perc_reac;
+    } else if ( products.percent != perc_prod && perc_prod >= 0 && perc_prod <= 100) {
+        products.percent = perc_prod;
+        reactants.percent = 100 - perc_prod;
+    }
+
+    document.getElementsByName("%reac")[0].value = reactants.percent;
+    document.getElementsByName("%prod")[0].value = products.percent;
 }
 
 function showDetails() {
@@ -166,8 +182,8 @@ function showDetails() {
     ctx.strokeText("y: " + mouse.y, mouse.x, mouse.y + 60);
     ctx.strokeText("drag: " + drag, 0, 40);
     ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), 0, 50);
-    ctx.strokeText("%reac: " + arguments[0], reactants.x, 100);
-    ctx.strokeText("%prod: " + arguments[1], products.x, 100);
+    ctx.strokeText("%reac: " + reactants.percent, reactants.x, 100);
+    ctx.strokeText("%prod: " + products.percent, products.x, 100);
     ctx.strokeText("max_left: " + max_left, seesaw.left, 300);
     ctx.strokeText("max_right: " + max_right, seesaw.right,300);
 }
@@ -183,11 +199,7 @@ function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
 
-    var old_prod;
-    var old_reac;
-
-    var perc_prod = document.getElementsByName("%prod")[0].value;
-    var perc_reac = document.getElementsByName("%reac")[0].value;
+    
 
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
@@ -199,12 +211,12 @@ function draw() {
     var time = new Date();
     var angle_dx = 0; //(time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
 
-    //math();
+    math();
 
      // Clears canvas.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    showDetails(perc_reac, perc_prod);
+    showDetails();
     
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
