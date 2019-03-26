@@ -38,8 +38,16 @@ var fulcrum = {
         ctx.lineCap = "butt";
         ctx.fillStyle = this.color;
 
-        if ( this.x < max_left ) this.x = max_left;
-        else if ( this.x > max_right ) this.x = max_right;
+        if ( this.x < max_left ) {
+        	this.x = max_left;
+        	this.x = max_left + 3;
+        	drag = false;
+        }
+        else if ( this.x > max_right ){
+        	this.x = max_right;
+        	this.x = max_right - 3;
+        	drag = false;
+        } 
 
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
@@ -179,16 +187,11 @@ function draw() {
      // Clears canvas.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    ctx.strokeText("x: " + fulcrum.x, fulcrum.x - 10, fulcrum.y + 70);
-    ctx.strokeText("y: " + fulcrum.y, fulcrum.x - 10, fulcrum.y + 80);
-    ctx.strokeText("x: " + mouse.x, mouse.x, mouse.y + 50);
-    ctx.strokeText("y: " + mouse.y, mouse.x, mouse.y + 60);
-    ctx.strokeText("drag: " + drag, 0, 40);
-    ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), 0, 50);
-    ctx.strokeText("%reac: " + perc_reac, reactants.x, 100);
-    ctx.strokeText("%prod: " + perc_prod, products.x, 100);
-    ctx.strokeText("max_left: " + max_left, seesaw.left, 300);
-    ctx.strokeText("max_right: " + max_right, seesaw.right,300);
+    ctx.strokeText("x: " + fulcrum.x, mouse.x, mouse.y + 30);
+    ctx.strokeText("drag: " + drag, mouse.x, mouse.y + 40);
+    ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), mouse.x, mouse.y + 50);
+    ctx.strokeText("%reac: " + perc_reac, mouse.x, mouse.y + 70);
+    ctx.strokeText("%prod: " + perc_prod, mouse.x, mouse.y + 80);
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
     ctx.strokeText("clientY" + positions.clientY, mouse.x, mouse.y + 80);
@@ -230,20 +233,19 @@ canvas.addEventListener('mouseover', function(e) {
 canvas.addEventListener('mousemove', function(e) {
     mouse.x = e.clientX - canvasLeft;
     mouse.y = e.clientY - canvasTop;
-    //positions.pageX = e.pageX;
-    //positions.pageY = e.pageY;
-    //positions.clientX = e.clientX;
-    //positions.clientY = e.clientY;
-    //positions.screenX = e.screenX;
-    //positions.screenY = e.screenY;
+    positions.pageX = e.pageX;
+    positions.pageY = e.pageY;
+    positions.clientX = e.clientX;
+    positions.clientY = e.clientY;
+    positions.screenX = e.screenX;
+    positions.screenY = e.screenY;
 
-    //obj.x = mouse.x;
-    //obj.y = mouse.y;
+    obj.x = mouse.x;
+    obj.y = mouse.y;
     //if ( mouse.x < max_left || mouse.y > max_right ) cancelAnimationFrame(raf);
     //if (drag && !fulcrum.outOfRange()) fulcrum.x = mouse.x;
-    //if (drag && !fulcrum.outOfRange()) fulcrum.x = mouse.x;
-    if (drag) {
-        if ( mouse.x > max_left || mouse.x < max_right ) fulcrum.x = mouse.x;
+    if (drag && !fulcrum.outOfRange()) {
+    	fulcrum.x = mouse.x;
     }
 });
 
