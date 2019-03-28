@@ -1,52 +1,46 @@
 var canvas = document.getElementById("myCanvas");
 if (canvas.getContext) var ctx = canvas.getContext("2d");
-var canvasLeft;
-var canvasTop;
-var raf;
+var canvasLeft, canvasTop;
 
 var centerX = 400, centerY = 200, buffer = 20;
 var drag = false;
-var max_left = 240, max_right = 560;
+var max_left = 250, max_right = 550;
 
-const MIN_SIZE = 20, MAX_SIZE = 100;
+const MIN_SIZE = 10, MAX_SIZE = 150;
 
 // Objects
 
 var mouse = {
-    x: 0,
-    y: 0
-};
-
-var dragBox = {
-    x: max_left,
-    y: 0,
-    width: max_right - max_left,
-    height: canvas.height,
-    draw: function() {
-
-    }
+    x: -100,
+    y: -100
 };
 
 var fulcrum = {
     x: centerX,
-    y: centerY,
+    y: centerY + 50,
     w: 20,
     h: 60,
+    k: 1,
     color: "rgb(0, 0, 0)",
     draw: function() {
         ctx.lineWidth = 1;
         ctx.lineCap = "butt";
         ctx.fillStyle = this.color;
+
+         if ( this.k < 0 ) this.k = 0;
+        //else if ( this.k >  )
+
+        // Keeps fulcrum position within range.
         if ( this.x < max_left ) {
-            this.x = max_left;
-            this.x = max_left + 3;
+            this.x = max_left + 1;
             drag = false;
         }
         else if ( this.x > max_right ){
-            this.x = max_right;
-            this.x = max_right - 3;
+            this.x = max_right - 1;
             drag = false;
-        } 
+        }
+
+
 
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
@@ -158,11 +152,11 @@ function getPosition( element ) {
 /*  Performs necessart mathematics that alter the state of the animations.
  */
 function math() {
-    // Updates reactant and product percentage values.
+    // Retrieves reactant and product percentage values.
     var perc_reac = document.getElementsByName("%reac")[0].value;
     var perc_prod = document.getElementsByName("%prod")[0].value;
     
-
+    // Updates reactant and product percentage values in objects.
     if ( reactants.percent != perc_reac && perc_reac >= 0 && perc_reac <= 100) {
         reactants.percent = perc_reac;
         products.percent = 100 - perc_reac;
@@ -171,21 +165,59 @@ function math() {
         reactants.percent = 100 - perc_prod;
     }
 
+    // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
     document.getElementsByName("%prod")[0].value = products.percent;
+
+    // Updates sizes of reactants and products.
+    reactants.size = MIN_SIZE  + (MAX_SIZE - MIN_SIZE) * (reactants.percent / 100);
+    products.size = MIN_SIZE + (MAX_SIZE - MIN_SIZE) * (products.percent / 100);
+
+    /*
+    var reac_force = (fulcrum.x - reactants.x) * reactants.size;
+    var prod_force = (products.x - fulcrum.x) * products.size;
+
+    if ( reac_force > prod_force ) {
+
+    } else {
+
+    }
+
+    ctx.strokeText("reac_force: " + reac_force, centerX - 100, centerY - 20);
+    ctx.strokeText("prod_force: " + prod_force, centerX + 100, centerY - 20);
+    */
+
+    // Retrieves equilibrium constant value.
+    fulcrum.k = document.getElementsByName("equil")[0].value;
+    if ( drag ) {
+        if ( fulcrum.k <= 1 ) {
+            document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
+        } else {
+
+        }
+    } else {
+        if ( fulcrum.k <= 1 ) {
+            fulcrum.x = max_left + (centerX - max_left) * fulcrum.k;
+        } else {
+
+        }
+    }
 }
 
 function showDetails() {
-    ctx.strokeText("x: " + fulcrum.x, fulcrum.x - 10, fulcrum.y + 70);
-    ctx.strokeText("y: " + fulcrum.y, fulcrum.x - 10, fulcrum.y + 80);
+    //.strokeText("x: " + fulcrum.x, fulcrum.x - 10, fulcrum.y + 70);
+    //ctx.strokeText("y: " + fulcrum.y, fulcrum.x - 10, fulcrum.y + 80);
     ctx.strokeText("x: " + mouse.x, mouse.x, mouse.y + 50);
     ctx.strokeText("y: " + mouse.y, mouse.x, mouse.y + 60);
-    ctx.strokeText("drag: " + drag, 0, 40);
-    ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), 0, 50);
+    //ctx.strokeText("drag: " + drag, 0, 40);
+    //ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), 0, 50);
     ctx.strokeText("%reac: " + reactants.percent, reactants.x, 100);
     ctx.strokeText("%prod: " + products.percent, products.x, 100);
-    ctx.strokeText("max_left: " + max_left, seesaw.left, 300);
-    ctx.strokeText("max_right: " + max_right, seesaw.right,300);
+    //ctx.strokeText("max_left: " + max_left, seesaw.left, 300);
+    //ctx.strokeText("max_right: " + max_right, seesaw.right, 300);
+    //ctx.strokeText("dist_left: " + (fulcrum.x - reactants.x), centerX - 100, centerY);
+    //ctx.strokeText("dist_right: " + (products.x - fulcrum.x), centerX + 100, centerY);
+    ctx.strokeText("k_const: " + fulcrum.k, fulcrum.x, fulcrum.y - 30);
 }
 
 /*  Draw animation to canvas.
@@ -199,13 +231,14 @@ function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
 
-    
-
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
+    if ( maxAngle > 50 * (Math.PI / 180) ) maxAngle = 50 * (Math.PI / 180);
     var angle = seesaw.angle * (Math.PI / 180);
     if ( angle > maxAngle ) angle = maxAngle;
     else if ( angle < -maxAngle ) angle = -maxAngle;
+
+
      
     // Draws objects to screen.
     var time = new Date();
@@ -217,6 +250,8 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     showDetails();
+
+    ctx.strokeText("maxAngle:" + (maxAngle * (180 / Math.PI)), fulcrum.x, fulcrum.y - 20);
     
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
@@ -245,7 +280,7 @@ function draw() {
 
     fulcrum.draw();
   
-  raf = window.requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw);
 }
 
 canvas.addEventListener('keydown', function(e) {
