@@ -280,8 +280,13 @@ function draw() {
     ctx.translate(-fulcrum.x, -fulcrum.y);
 
     seesaw.draw();
-    reactants.draw();
-    products.draw();
+    //Makes 0% reactants and products disappear
+    if( reactants.percent != 0 ){
+        reactants.draw();
+    } 
+    if( products.percent != 0 ){
+        products.draw();
+    } 
     
     ctx.restore();
 
