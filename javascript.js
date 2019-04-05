@@ -237,12 +237,10 @@ function draw() {
     var angle = seesaw.angle * (Math.PI / 180);
     if ( angle > maxAngle ) angle = maxAngle;
     else if ( angle < -maxAngle ) angle = -maxAngle;
-
-
-     
+ 
     // Draws objects to screen.
     var time = new Date();
-    var angle_dx = 0; //(time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
+    var angle_dx = 0; // (time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
 
     math();
 
@@ -267,11 +265,20 @@ function draw() {
     obj.draw();
     
     ctx.save();
-    
+
+    /* Determines Fulcrum Angle*/
+    /*Currently only works with the two variable percentage of reactant and products*/
+    if( reactants.percent == products.percent ){
+        seesaw.angle = 0;
+    } else if ( reactants.percent >= products.percent ) {
+        seesaw.angle = -90;
+    } else if ( products.percent <= products.percent ){
+        seesaw.angle = 90;
+    }
     ctx.translate(fulcrum.x, fulcrum.y);
     ctx.rotate(angle + angle_dx); // Rotates seesaw, products, and reactants.
     ctx.translate(-fulcrum.x, -fulcrum.y);
-    
+
     seesaw.draw();
     reactants.draw();
     products.draw();
