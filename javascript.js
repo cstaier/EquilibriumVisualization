@@ -166,7 +166,8 @@ function math() {
     // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
     document.getElementsByName("%prod")[0].value = products.percent;
-    document.getElementsByName("equil")[0].value = reactants.percent / products.percent; //De'Toine we changed this
+    //K-Value is now a ratio, will be Auto Mode
+    document.getElementsByName("equil")[0].value = reactants.percent / products.percent;
 
     // Updates sizes of reactants and products.
     reactants.size = MIN_SIZE  + (MAX_SIZE - MIN_SIZE) * (reactants.percent / 100);
@@ -196,7 +197,7 @@ function math() {
         }
     } else {
         if ( fulcrum.k <= 1 ) {
-            fulcrum.x = max_left + (centerX - max_left) * fulcrum.k;
+            fulcrum.x = max_left + (centerX - max_left) * fulcrum.k; //this may be causing issues when non-dragging
         } else {
 
         }
@@ -246,9 +247,9 @@ function draw() {
      // Clears canvas.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    showDetails();
+    //showDetails(); //removed for stable build
 
-    ctx.strokeText("maxAngle:" + (maxAngle * (180 / Math.PI)), fulcrum.x, fulcrum.y - 20);
+    //ctx.strokeText("maxAngle:" + (maxAngle * (180 / Math.PI)), fulcrum.x, fulcrum.y - 20); //this should also be in showDetails()
     
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
@@ -261,7 +262,7 @@ function draw() {
     ctx.strokeText("canvasTop" + canvasTop, mouse.x, mouse.y + 140);
     */
     
-    obj.draw();
+    //obj.draw(); //removed for stable build
     
     ctx.save();
 
