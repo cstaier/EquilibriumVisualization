@@ -40,8 +40,6 @@ var fulcrum = {
             drag = false;
         }
 
-
-
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo( (this.x + this.w/2), this.y + this.h);
@@ -155,7 +153,7 @@ function math() {
     // Retrieves reactant and product percentage values.
     var perc_reac = document.getElementsByName("%reac")[0].value;
     var perc_prod = document.getElementsByName("%prod")[0].value;
-    
+   
     // Updates reactant and product percentage values in objects.
     if ( reactants.percent != perc_reac && perc_reac >= 0 && perc_reac <= 100) {
         reactants.percent = perc_reac;
@@ -168,6 +166,7 @@ function math() {
     // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
     document.getElementsByName("%prod")[0].value = products.percent;
+    document.getElementsByName("equil")[0].value = reactants.percent / products.percent; //De'Toine we changed this
 
     // Updates sizes of reactants and products.
     reactants.size = MIN_SIZE  + (MAX_SIZE - MIN_SIZE) * (reactants.percent / 100);
