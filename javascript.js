@@ -189,19 +189,20 @@ function math() {
 
     // Retrieves equilibrium constant value.
     fulcrum.k = document.getElementsByName("equil")[0].value;
-    if ( drag ) {
-        if ( fulcrum.k <= 1 ) {
-            document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
-        } else {
 
-        }
-    } else {
-        if ( fulcrum.k <= 1 ) {
-            fulcrum.x = max_left + (centerX - max_left) * fulcrum.k; //this may be causing issues when non-dragging
-        } else {
+        if ( drag ) {
+            if ( fulcrum.k <= 1 ) {
+                document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
+            } else {
 
+            }
+        } else {
+            if ( fulcrum.k <= 1 && !document.getElementsByName("mode")[0].checked ){
+                fulcrum.x = max_left + (centerX - max_left) * fulcrum.k; //this may be causing issues when non-dragging
+            } else {
+
+            }
         }
-    }
 }
 
 function showDetails() {
@@ -230,6 +231,12 @@ function showDetails() {
 function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
+    if( document.getElementsByName("mode")[0].checked ){
+        drag = false;
+        fulcrum.x = centerX;
+        fulcrum.y = centerY + 50;
+    }   
+
 
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
