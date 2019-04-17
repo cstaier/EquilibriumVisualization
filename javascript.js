@@ -40,8 +40,6 @@ var fulcrum = {
             drag = false;
         }
 
-
-
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo( (this.x + this.w/2), this.y + this.h);
@@ -155,7 +153,7 @@ function math() {
     // Retrieves reactant and product percentage values.
     var perc_reac = document.getElementsByName("%reac")[0].value;
     var perc_prod = document.getElementsByName("%prod")[0].value;
-    
+   
     // Updates reactant and product percentage values in objects.
     if ( reactants.percent != perc_reac && perc_reac >= 0 && perc_reac <= 100) {
         reactants.percent = perc_reac;
@@ -168,6 +166,8 @@ function math() {
     // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
     document.getElementsByName("%prod")[0].value = products.percent;
+    //K-Value is now a ratio, will be Auto Mode
+    document.getElementsByName("equil")[0].value = reactants.percent / products.percent;
 
     // Updates sizes of reactants and products.
     reactants.size = MIN_SIZE  + (MAX_SIZE - MIN_SIZE) * (reactants.percent / 100);
@@ -189,19 +189,20 @@ function math() {
 
     // Retrieves equilibrium constant value.
     fulcrum.k = document.getElementsByName("equil")[0].value;
-    if ( drag ) {
-        if ( fulcrum.k <= 1 ) {
-            document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
-        } else {
 
-        }
-    } else {
-        if ( fulcrum.k <= 1 ) {
-            fulcrum.x = max_left + (centerX - max_left) * fulcrum.k;
-        } else {
+        if ( drag ) {
+            if ( fulcrum.k <= 1 ) {
+                document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
+            } else {
 
+            }
+        } else {
+            if ( fulcrum.k <= 1 && !document.getElementsByName("mode")[0].checked ){
+                fulcrum.x = max_left + (centerX - max_left) * fulcrum.k; //this may be causing issues when non-dragging
+            } else {
+
+            }
         }
-    }
 }
 
 function showDetails() {
@@ -230,6 +231,12 @@ function showDetails() {
 function draw() {
     canvasLeft = getPosition(canvas).x;
     canvasTop = getPosition(canvas).y;
+    if( document.getElementsByName("mode")[0].checked ){
+        drag = false;
+        fulcrum.x = centerX;
+        fulcrum.y = centerY + 50;
+    }   
+
 
     // Set angle according to limit (Seesaw cannot tip below the bottom of the fulcrum).
     var maxAngle = Math.asin( (fulcrum.h) / (seesaw.length - (fulcrum.x - seesaw.left)) );
@@ -237,21 +244,19 @@ function draw() {
     var angle = seesaw.angle * (Math.PI / 180);
     if ( angle > maxAngle ) angle = maxAngle;
     else if ( angle < -maxAngle ) angle = -maxAngle;
-
-
-     
+ 
     // Draws objects to screen.
     var time = new Date();
-    var angle_dx = 0; //(time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
+    var angle_dx = 0; // (time.getMilliseconds() / 1000) * 360 * (Math.PI / 180);
 
     math();
 
      // Clears canvas.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    showDetails();
+    //showDetails(); //removed for stable build
 
-    ctx.strokeText("maxAngle:" + (maxAngle * (180 / Math.PI)), fulcrum.x, fulcrum.y - 20);
+    //ctx.strokeText("maxAngle:" + (maxAngle * (180 / Math.PI)), fulcrum.x, fulcrum.y - 20); //this should also be in showDetails()
     
     /*
     ctx.strokeText("clientX" + positions.clientX, mouse.x, mouse.y + 70);
@@ -264,17 +269,31 @@ function draw() {
     ctx.strokeText("canvasTop" + canvasTop, mouse.x, mouse.y + 140);
     */
     
-    obj.draw();
+    //obj.draw(); //removed for stable build
     
     ctx.save();
-    
+
+    /* Determines Fulcrum Angle*/
+    /*Currently only works with the two variable percentage of reactant and products*/
+    if( reactants.percent == products.percent ){
+        seesaw.angle = 0;
+    } else if ( reactants.percent >= products.percent ) {
+        seesaw.angle = -90;
+    } else if ( products.percent <= products.percent ){
+        seesaw.angle = 90;
+    }
     ctx.translate(fulcrum.x, fulcrum.y);
     ctx.rotate(angle + angle_dx); // Rotates seesaw, products, and reactants.
     ctx.translate(-fulcrum.x, -fulcrum.y);
-    
+
     seesaw.draw();
-    reactants.draw();
-    products.draw();
+    //Makes 0% reactants and products disappear
+    if( reactants.percent != 0 ){
+        reactants.draw();
+    } 
+    if( products.percent != 0 ){
+        products.draw();
+    } 
     
     ctx.restore();
 
