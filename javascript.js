@@ -2,7 +2,7 @@ var canvas = document.getElementById("myCanvas");
 if (canvas.getContext) var ctx = canvas.getContext("2d");
 var canvasLeft, canvasTop;
 
-var centerX = 400, centerY = 200, buffer = 20;
+var centerX = 400, centerY = 200, buffer = 14;
 var drag = false;
 var max_left = 250, max_right = 550;
 
@@ -55,12 +55,12 @@ var fulcrum = {
 };
 
 var seesaw = {
-    length: 600,
+    length: 640,
     width: 10,
-    left: canvas.width/2 - 600/2,
-    right: canvas.width/2 + 600/2,
+    left: canvas.width/2 - 640/2,
+    right: canvas.width/2 + 640/2,
     color: "rgb(0, 0, 0)",
-    angle: 100,
+    angle: 0,
     draw: function() {
         ctx.lineWidth = this.width;
         ctx.lineCap = "round";
@@ -81,7 +81,7 @@ var reactants = {
     draw: function() {
         if ( this.size < MIN_SIZE ) this.size = MIN_SIZE;
         else if ( this.size > MAX_SIZE ) this.size = MAX_SIZE;
-
+        this.x = seesaw.left + buffer - 10;
         this.y = fulcrum.y - seesaw.width - this.size;
         max_left = seesaw.left + this.size + 2 * buffer;
 
