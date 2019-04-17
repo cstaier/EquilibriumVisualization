@@ -195,12 +195,12 @@ function math() {
     } else if ( k_const != fulcrum.k ) {
         ctx.strokeText("constant", 100, 50);
         fulcrum.k = k_const;
-        products.percent = 100 / ( fulcrum.k + 1 );
+        products.percent = (100 / (fulcrum.k + 1));
         ctx.strokeText("products.percent = " + products.percent, 100, 60);
         reactants.percent = 100 - products.percent;
     }
 
-    ctx.strokeText("products.percent = 100 / ( fulcrum.k + 1 )     " + (products.percent = 100 / ( fulcrum.k + 1 )), 350, 50);
+    ctx.strokeText("products.percent = 100 / ( fulcrum.k + 1 )     " + (100 / fulcrum.k), 350, 50);
 
     // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
