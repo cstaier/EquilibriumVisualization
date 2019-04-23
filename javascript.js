@@ -147,78 +147,85 @@ function getPosition( element ) {
             y:rect.top};
 }
 
-/*  Performs necessart mathematics that alter the state of the animations.
+/*  Performs necessary mathematics that alter the state of the animations.
  */
 function math() {
+
     // Retrieves reactant and product percentage values.
     var perc_reac = document.getElementsByName("%reac")[0].value;
     var perc_prod = document.getElementsByName("%prod")[0].value;
-   
+    var k_const = document.getElementsByName("equil")[0].value;
+
+    ctx.strokeText("perc_reac: " + perc_reac, 350, 100);
+    ctx.strokeText("perc_prod: " + perc_prod, 350, 110);
+    ctx.strokeText("k_const: " + k_const, 350, 120);
+
+    
     // Updates reactant and product percentage values in objects.
-    if ( reactants.percent != perc_reac && perc_reac >= 0 && perc_reac <= 100) {
+    if ( perc_reac != reactants.percent && perc_reac >= 0 && perc_reac <= 100) {
+        ctx.strokeText("reactants", 100, 50);
         reactants.percent = perc_reac;
         products.percent = 100 - perc_reac;
-    } else if ( products.percent != perc_prod && perc_prod >= 0 && perc_prod <= 100) {
+        fulcrum.k = reactants.percent != 0 ? products.percent / reactants.percent : 100;
+    } else if ( perc_prod != products.percent && perc_prod >= 0 && perc_prod <= 100) {
+        ctx.strokeText("products", 100, 50);
         products.percent = perc_prod;
         reactants.percent = 100 - perc_prod;
+        fulcrum.k = reactants.percent != 0 ? products.percent / reactants.percent : 100;
+    } else if ( k_const != fulcrum.k ) {
+        ctx.strokeText("constant", 100, 50);
+        if ( k_const <= 0 || k_const == null ) {
+          fulcrum.k = 0;
+          products.percent = 100;
+          reactants.percent = 0;
+        } else {
+          fulcrum.k = k_const;
+          products.percent = ( 100 / ( Number(fulcrum.k) + 1 ) ) * Number(fulcrum.k);
+          ctx.strokeText("products.percent = " + products.percent, 100, 60);
+          reactants.percent = 100 - products.percent;
+        }
     }
+
+    ctx.strokeText("products.percent = 100 / ( fulcrum.k )     " + (100 / fulcrum.k), 350, 50);
+    ctx.strokeText("fulcrum.k + 1: " + (100 / ( Number(fulcrum.k) + 1 )), 350, 60);
 
     // Updates reactant and product percentage values in HTML elements.
     document.getElementsByName("%reac")[0].value = reactants.percent;
     document.getElementsByName("%prod")[0].value = products.percent;
-    //K-Value is now a ratio, will be Auto Mode
-    document.getElementsByName("equil")[0].value = reactants.percent / products.percent;
+    document.getElementsByName("equil")[0].value = fulcrum.k;
 
     // Updates sizes of reactants and products.
     reactants.size = MIN_SIZE  + (MAX_SIZE - MIN_SIZE) * (reactants.percent / 100);
     products.size = MIN_SIZE + (MAX_SIZE - MIN_SIZE) * (products.percent / 100);
 
-    /*
-    var reac_force = (fulcrum.x - reactants.x) * reactants.size;
-    var prod_force = (products.x - fulcrum.x) * products.size;
 
-    if ( reac_force > prod_force ) {
-
-    } else {
-
+    /* Determines Fulcrum Angle */
+    /* Currently only works with the two variable percentage of reactant and products */
+    if( document.getElementsByName("mode")[0].checked ){
+        seesaw.angle = 0;
+    } else if( reactants.percent == products.percent ) {
+        seesaw.angle = 0;
+    } else if ( reactants.percent >= products.percent ) {
+        seesaw.angle = -90;
+    } else if ( products.percent <= products.percent ) {
+        seesaw.angle = 90;
     }
-
-    ctx.strokeText("reac_force: " + reac_force, centerX - 100, centerY - 20);
-    ctx.strokeText("prod_force: " + prod_force, centerX + 100, centerY - 20);
-    */
-
-    // Retrieves equilibrium constant value.
-    fulcrum.k = document.getElementsByName("equil")[0].value;
-
-        if ( drag ) {
-            if ( fulcrum.k <= 1 ) {
-                document.getElementsByName("equil")[0].value = ( fulcrum.x - max_left ) / ( centerX - max_left);
-            } else {
-
-            }
-        } else {
-            if ( fulcrum.k <= 1 && !document.getElementsByName("mode")[0].checked ){
-                fulcrum.x = max_left + (centerX - max_left) * fulcrum.k; //this may be causing issues when non-dragging
-            } else {
-
-            }
-        }
 }
 
 function showDetails() {
     //.strokeText("x: " + fulcrum.x, fulcrum.x - 10, fulcrum.y + 70);
     //ctx.strokeText("y: " + fulcrum.y, fulcrum.x - 10, fulcrum.y + 80);
-    ctx.strokeText("x: " + mouse.x, mouse.x, mouse.y + 50);
-    ctx.strokeText("y: " + mouse.y, mouse.x, mouse.y + 60);
+    //ctx.strokeText("x: " + mouse.x, mouse.x, mouse.y + 50);
+    //ctx.strokeText("y: " + mouse.y, mouse.x, mouse.y + 60);
     //ctx.strokeText("drag: " + drag, 0, 40);
     //ctx.strokeText("outOfRange: " + fulcrum.outOfRange(), 0, 50);
-    ctx.strokeText("%reac: " + reactants.percent, reactants.x, 100);
-    ctx.strokeText("%prod: " + products.percent, products.x, 100);
+    //ctx.strokeText("%reac: " + reactants.percent, reactants.x, 100);
+    //ctx.strokeText("%prod: " + products.percent, products.x, 100);
     //ctx.strokeText("max_left: " + max_left, seesaw.left, 300);
     //ctx.strokeText("max_right: " + max_right, seesaw.right, 300);
     //ctx.strokeText("dist_left: " + (fulcrum.x - reactants.x), centerX - 100, centerY);
     //ctx.strokeText("dist_right: " + (products.x - fulcrum.x), centerX + 100, centerY);
-    ctx.strokeText("k_const: " + fulcrum.k, fulcrum.x, fulcrum.y - 30);
+    //ctx.strokeText("k_const: " + fulcrum.k, fulcrum.x, fulcrum.y - 30);
 }
 
 /*  Draw animation to canvas.
@@ -273,20 +280,12 @@ function draw() {
     
     ctx.save();
 
-    /* Determines Fulcrum Angle*/
-    /*Currently only works with the two variable percentage of reactant and products*/
-    if( reactants.percent == products.percent ){
-        seesaw.angle = 0;
-    } else if ( reactants.percent >= products.percent ) {
-        seesaw.angle = -90;
-    } else if ( products.percent <= products.percent ){
-        seesaw.angle = 90;
-    }
     ctx.translate(fulcrum.x, fulcrum.y);
     ctx.rotate(angle + angle_dx); // Rotates seesaw, products, and reactants.
     ctx.translate(-fulcrum.x, -fulcrum.y);
 
     seesaw.draw();
+
     //Makes 0% reactants and products disappear
     if( reactants.percent != 0 ){
         reactants.draw();
@@ -313,15 +312,6 @@ canvas.addEventListener('mouseover', function(e) {
 canvas.addEventListener('mousemove', function(e) {
     mouse.x = e.clientX - canvasLeft;
     mouse.y = e.clientY - canvasTop;
-    //positions.pageX = e.pageX;
-    //positions.pageY = e.pageY;
-    //positions.clientX = e.clientX;
-    //positions.clientY = e.clientY;
-    //positions.screenX = e.screenX;
-    //positions.screenY = e.screenY;
-
-    //obj.x = mouse.x;
-    //obj.y = mouse.y;
     if (drag && !fulcrum.outOfRange()) fulcrum.x = mouse.x;
 });
 
